@@ -202,7 +202,7 @@
                 <section id="view-dashboard" class="view-section active-view">
                     <!-- KPI Metric Cards -->
                     <div class="stats-grid">
-                        <div class="stat-card" style="--card-accent: #10b981;">
+                        <div class="stat-card" style="--card-accent: #059669;">
                             <div class="stat-info">
                                 <div class="stat-label">Total Deposits (Liquidity)</div>
                                 <div class="stat-value" id="statTotalLiquidity">₹0.00</div>
@@ -213,7 +213,7 @@
                             </div>
                         </div>
 
-                        <div class="stat-card" style="--card-accent: #3b82f6;">
+                        <div class="stat-card" style="--card-accent: #2563eb;">
                             <div class="stat-info">
                                 <div class="stat-label">Total Accounts</div>
                                 <div class="stat-value" id="statTotalAccounts">0</div>
@@ -224,24 +224,24 @@
                             </div>
                         </div>
 
-                        <div class="stat-card" style="--card-accent: #a855f7;">
+                        <div class="stat-card" style="--card-accent: #475569;">
                             <div class="stat-info">
                                 <div class="stat-label">Registered Customers</div>
                                 <div class="stat-value" id="statTotalCustomers">0</div>
                                 <div class="stat-sub">KYC Verified profiles</div>
                             </div>
-                            <div class="stat-icon icon-purple">
+                            <div class="stat-icon icon-slate">
                                 <i class="fas fa-user-shield"></i>
                             </div>
                         </div>
 
-                        <div class="stat-card" style="--card-accent: #06b6d4;">
+                        <div class="stat-card" style="--card-accent: #0284c7;">
                             <div class="stat-info">
                                 <div class="stat-label">Total Transfers Volume</div>
                                 <div class="stat-value" id="statTransferVolume">₹0.00</div>
                                 <div class="stat-sub"><span id="statTotalTransfers">0</span> inter-account transfers</div>
                             </div>
-                            <div class="stat-icon icon-cyan">
+                            <div class="stat-icon icon-sky">
                                 <i class="fas fa-paper-plane"></i>
                             </div>
                         </div>
@@ -277,7 +277,7 @@
                         <!-- Account Types Distribution -->
                         <div class="card-panel">
                             <div class="card-header-flex">
-                                <h3><i class="fas fa-chart-bar" style="color: #6366f1;"></i> Portfolio by Account Type</h3>
+                                <h3><i class="fas fa-chart-bar" style="color: #3b82f6;"></i> Portfolio by Account Type</h3>
                                 <span class="badge badge-type">Live Breakdown</span>
                             </div>
                             <div id="accountTypesBreakdown">
@@ -288,7 +288,7 @@
                         <!-- Recent Transactions -->
                         <div class="card-panel">
                             <div class="card-header-flex">
-                                <h3><i class="fas fa-history" style="color: #06b6d4;"></i> Recent Ledger Transactions</h3>
+                                <h3><i class="fas fa-history" style="color: #60a5fa;"></i> Recent Ledger Transactions</h3>
                                 <button class="btn btn-sm btn-outline" onclick="switchView('transactions')">View All</button>
                             </div>
                             <div class="table-responsive">
@@ -316,7 +316,7 @@
                     <div class="card-panel">
                         <div class="card-header-flex">
                             <div>
-                                <h3><i class="fas fa-users" style="color:#6366f1;"></i> Customer Management</h3>
+                                <h3><i class="fas fa-users" style="color: #3b82f6;"></i> Customer Management</h3>
                                 <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 4px;">Registered clients and their associated bank accounts</p>
                             </div>
                             <button class="btn btn-primary" onclick="openModal('newCustomerModal')">
@@ -509,7 +509,7 @@
                     <div class="card-panel" style="margin-bottom: 24px;">
                         <div class="card-header-flex">
                             <div>
-                                <h3><i class="fas fa-project-diagram" style="color:#6366f1;"></i> MySQL EER Diagram & Relational Schema</h3>
+                                <h3><i class="fas fa-project-diagram" style="color: #3b82f6;"></i> MySQL EER Diagram & Relational Schema</h3>
                                 <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 4px;">Entity-Relationship diagram matching the MySQL database implementation</p>
                             </div>
                             <span class="badge badge-type">Customers • Accounts • Transactions • Transfers</span>
@@ -523,7 +523,7 @@
                     <!-- Trigger Architecture -->
                     <div class="card-panel">
                         <div class="card-header-flex">
-                            <h3><i class="fas fa-bolt" style="color:#f59e0b;"></i> MySQL Automation Trigger: <code>after_account_update</code></h3>
+                            <h3><i class="fas fa-bolt" style="color: #d97706;"></i> MySQL Automation Trigger: <code>after_account_update</code></h3>
                             <span class="badge badge-active">Active in MySQL</span>
                         </div>
                         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
@@ -556,7 +556,7 @@ END;</div>
     <div class="modal-overlay" id="depositModal">
         <div class="modal-box">
             <div class="modal-header">
-                <h3><i class="fas fa-arrow-down" style="color:#10b981;"></i> Deposit Funds</h3>
+                <h3><i class="fas fa-arrow-down" style="color: #059669;"></i> Deposit Funds</h3>
                 <button class="modal-close-btn" onclick="closeModal('depositModal')">&times;</button>
             </div>
             <form id="depositForm">
@@ -584,7 +584,7 @@ END;</div>
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal-box">
             <div class="modal-header">
-                <h3><i class="fas fa-arrow-up" style="color:#f43f5e;"></i> Withdraw Funds</h3>
+                <h3><i class="fas fa-arrow-up" style="color: #dc2626;"></i> Withdraw Funds</h3>
                 <button class="modal-close-btn" onclick="closeModal('withdrawModal')">&times;</button>
             </div>
             <form id="withdrawForm">
@@ -612,7 +612,7 @@ END;</div>
     <div class="modal-overlay" id="transferModal">
         <div class="modal-box">
             <div class="modal-header">
-                <h3><i class="fas fa-exchange-alt" style="color:#6366f1;"></i> Inter-Account Transfer</h3>
+                <h3><i class="fas fa-exchange-alt" style="color: #3b82f6;"></i> Inter-Account Transfer</h3>
                 <button class="modal-close-btn" onclick="closeModal('transferModal')">&times;</button>
             </div>
             <form id="transferForm">
@@ -646,7 +646,7 @@ END;</div>
     <div class="modal-overlay" id="newCustomerModal">
         <div class="modal-box">
             <div class="modal-header">
-                <h3><i class="fas fa-user-plus" style="color:#06b6d4;"></i> Register Customer</h3>
+                <h3><i class="fas fa-user-plus" style="color: #3b82f6;"></i> Register Customer</h3>
                 <button class="modal-close-btn" onclick="closeModal('newCustomerModal')">&times;</button>
             </div>
             <form id="newCustomerForm">
@@ -686,7 +686,7 @@ END;</div>
     <div class="modal-overlay" id="newAccountModal">
         <div class="modal-box">
             <div class="modal-header">
-                <h3><i class="fas fa-plus-circle" style="color:#a855f7;"></i> Open Bank Account</h3>
+                <h3><i class="fas fa-plus-circle" style="color: #3b82f6;"></i> Open Bank Account</h3>
                 <button class="modal-close-btn" onclick="closeModal('newAccountModal')">&times;</button>
             </div>
             <form id="newAccountForm">
@@ -722,7 +722,7 @@ END;</div>
     <div class="modal-overlay" id="customerDetailsModal">
         <div class="modal-box modal-box-lg">
             <div class="modal-header">
-                <h3><i class="fas fa-id-card" style="color:#6366f1;"></i> Customer Profile & Accounts</h3>
+                <h3><i class="fas fa-id-card" style="color: #3b82f6;"></i> Customer Profile & Accounts</h3>
                 <button class="modal-close-btn" onclick="closeModal('customerDetailsModal')">&times;</button>
             </div>
             <div class="modal-body" id="customerDetailsModalBody">
