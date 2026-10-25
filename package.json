@@ -1,13 +1,19 @@
 {
   "name": "dbms-project",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Modern Bank Management System built with MySQL relational schema, automated trigger-based ledger auditing, Node.js Express backend, and a glassmorphic web UI.",
+  "main": "server.js",
+  "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "banking",
+    "dbms",
+    "mysql",
+    "express"
+  ],
+  "author": "Vedant",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
