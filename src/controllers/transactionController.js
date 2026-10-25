@@ -85,7 +85,7 @@ exports.deposit = async (req, res) => {
 
         res.json({
             success: true,
-            message: `Successfully deposited $${depositAmount.toFixed(2)} into Account #${account_number}`,
+            message: `Successfully deposited ₹${depositAmount.toFixed(2)} into Account #${account_number}`,
             account_number,
             amount: depositAmount,
             new_balance: parseFloat(updated[0].balance)
@@ -130,7 +130,7 @@ exports.withdraw = async (req, res) => {
         if (currentBalance < withdrawAmount) {
             return res.status(400).json({
                 success: false,
-                message: `Insufficient funds. Current balance is $${currentBalance.toFixed(2)}, attempted withdrawal: $${withdrawAmount.toFixed(2)}`
+                message: `Insufficient funds. Current balance is ₹${currentBalance.toFixed(2)}, attempted withdrawal: ₹${withdrawAmount.toFixed(2)}`
             });
         }
 
@@ -147,7 +147,7 @@ exports.withdraw = async (req, res) => {
 
         res.json({
             success: true,
-            message: `Successfully withdrew $${withdrawAmount.toFixed(2)} from Account #${account_number}`,
+            message: `Successfully withdrew ₹${withdrawAmount.toFixed(2)} from Account #${account_number}`,
             account_number,
             amount: withdrawAmount,
             new_balance: parseFloat(updated[0].balance)
@@ -205,7 +205,7 @@ exports.transfer = async (req, res) => {
             await connection.rollback();
             return res.status(400).json({
                 success: false,
-                message: `Insufficient balance in Sender Account #${sender_account}. Available: $${parseFloat(sender.balance).toFixed(2)}`
+                message: `Insufficient balance in Sender Account #${sender_account}. Available: ₹${parseFloat(sender.balance).toFixed(2)}`
             });
         }
 
@@ -253,7 +253,7 @@ exports.transfer = async (req, res) => {
 
         res.json({
             success: true,
-            message: `Transfer of $${transferAmount.toFixed(2)} from #${sender_account} to #${receiver_account} completed successfully.`,
+            message: `Transfer of ₹${transferAmount.toFixed(2)} from #${sender_account} to #${receiver_account} completed successfully.`,
             transfer_id: transferResult.insertId,
             sender_account,
             receiver_account,

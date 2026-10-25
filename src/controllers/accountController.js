@@ -187,7 +187,7 @@ exports.updateAccountStatus = async (req, res) => {
         if (status === 'CLOSED' && parseFloat(existing[0].balance) > 0) {
             return res.status(400).json({
                 success: false,
-                message: `Cannot close account with positive balance ($${existing[0].balance}). Withdraw or transfer funds first.`
+                message: `Cannot close account with positive balance (₹${existing[0].balance}). Withdraw or transfer funds first.`
             });
         }
 

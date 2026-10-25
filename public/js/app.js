@@ -13,10 +13,11 @@ const state = {
 // Formatting utilities
 const formatCurrency = (val) => {
     const num = parseFloat(val) || 0;
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
         style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2
+        currency: 'INR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     }).format(num);
 };
 

@@ -155,7 +155,7 @@ exports.deleteCustomer = async (req, res) => {
         if (balanceCheck[0].total_balance > 0) {
             return res.status(400).json({
                 success: false,
-                message: `Cannot delete customer with active accounts containing funds (Remaining Balance: $${balanceCheck[0].total_balance}). Please withdraw or transfer funds first.`
+                message: `Cannot delete customer with active accounts containing funds (Remaining Balance: ₹${balanceCheck[0].total_balance}). Please withdraw or transfer funds first.`
             });
         }
 
