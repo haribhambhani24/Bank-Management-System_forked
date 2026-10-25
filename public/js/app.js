@@ -612,20 +612,83 @@ window.viewCustomerDetails = async (custId) => {
 // EVENT LISTENERS INITIALIZATION
 // ----------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-    // Navigation items click
+    // Mobile Drawer Controls
+    const appSidebar = document.getElementById('appSidebar');
+    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+
+    const openMobileSidebar = () => {
+        if (appSidebar) appSidebar.classList.add('mobile-open');
+        if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+    };
+
+    const closeMobileSidebar = () => {
+        if (appSidebar) appSidebar.classList.remove('mobile-open');
+        if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+    };
+
+    mobileMenuBtn?.addEventListener('click', openMobileSidebar);
+    sidebarCloseBtn?.addEventListener('click', closeMobileSidebar);
+    sidebarBackdrop?.addEventListener('click', closeMobileSidebar);
+
+    // Brand Logo / Web App Name click -> Return to Home (Dashboard)
+    const goHome = (e) => {
+        e.preventDefault();
+        switchView('dashboard');
+        closeMobileSidebar();
+    };
+    document.getElementById('sidebarBrandLink')?.addEventListener('click', goHome);
+    document.getElementById('headerBrandLink')?.addEventListener('click', goHome);
+
+    // Navigation items click (and auto-close mobile drawer)
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
             const view = item.dataset.view;
-            if (view) switchView(view);
+            if (view) {
+                switchView(view);
+                closeMobileSidebar();
+            }
         });
     });
+
+    // Group Members Dropdown Toggle
+    const groupDropdownWrapper = document.getElementById('groupDropdownWrapper');
+    const groupMembersBtn = document.getElementById('groupMembersBtn');
+
+    if (groupMembersBtn && groupDropdownWrapper) {
+        groupMembersBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            groupDropdownWrapper.classList.toggle('open');
+            const isOpen = groupDropdownWrapper.classList.contains('open');
+            groupMembersBtn.setAttribute('aria-expanded', isOpen);
+        });
+
+        // Close on clicking anywhere outside
+        document.addEventListener('click', (e) => {
+            if (!groupDropdownWrapper.contains(e.target)) {
+                groupDropdownWrapper.classList.remove('open');
+                groupMembersBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                groupDropdownWrapper.classList.remove('open');
+                groupMembersBtn.setAttribute('aria-expanded', 'false');
+                closeMobileSidebar();
+            }
+        });
+    }
 
     // Test DB connection button in sidebar
     const testDbBtn = document.getElementById('btnTestConnection');
     if (testDbBtn) {
         testDbBtn.addEventListener('click', () => {
             switchView('schema-health');
+            closeMobileSidebar();
         });
     }
 

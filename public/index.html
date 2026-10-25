@@ -17,9 +17,12 @@
 <body>
 
     <div class="app-layout">
+        <!-- Sidebar Backdrop for Mobile -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
         <!-- ================= SIDEBAR NAVIGATION ================= -->
-        <aside class="sidebar">
-            <div class="brand-section">
+        <aside class="sidebar" id="appSidebar">
+            <div class="brand-section" id="sidebarBrandLink" role="button" tabindex="0" title="Go to Home Dashboard">
                 <div class="brand-logo-icon">
                     <i class="fas fa-university"></i>
                 </div>
@@ -27,6 +30,9 @@
                     <h1>Aura Bank</h1>
                     <span>DBMS Management</span>
                 </div>
+                <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
 
             <ul class="nav-menu">
@@ -93,16 +99,96 @@
         <div class="main-wrapper">
             <!-- Top Header -->
             <header class="top-header">
-                <div class="page-title-group">
-                    <h2 id="pageMainHeading">Banking Management Console</h2>
-                    <p>Connected to <code style="color:#38bdf8; font-family:var(--font-mono);">BankManagementDB</code> on MySQL 8.0</p>
+                <div class="header-left">
+                    <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+
+                    <!-- Clickable Brand on Header -->
+                    <div class="header-brand-link" id="headerBrandLink" role="button" tabindex="0" title="Go to Home Dashboard">
+                        <div class="header-logo-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="header-brand-text">
+                            <span class="header-brand-title">Aura Bank</span>
+                            <span class="header-brand-tag">DBMS</span>
+                        </div>
+                    </div>
+
+                    <div class="header-divider-v"></div>
+
+                    <div class="page-title-group">
+                        <h2 id="pageMainHeading">Banking Management Console</h2>
+                        <p id="pageSubHeading">Connected to <code style="color:#38bdf8; font-family:var(--font-mono);">BankManagementDB</code> on MySQL 8.0</p>
+                    </div>
                 </div>
 
                 <div class="header-actions">
+                    <!-- Project Group Members Dropdown -->
+                    <div class="group-dropdown-wrapper" id="groupDropdownWrapper">
+                        <button class="btn btn-outline btn-sm group-members-btn" id="groupMembersBtn" aria-haspopup="true" aria-expanded="false" title="View Project Team Members">
+                            <i class="fas fa-user-graduate" style="color: #818cf8;"></i>
+                            <span>Group Members</span>
+                            <i class="fas fa-chevron-down chevron-icon" id="groupChevron"></i>
+                        </button>
+
+                        <div class="group-dropdown-menu" id="groupDropdownMenu">
+                            <div class="group-dropdown-header">
+                                <span class="dropdown-header-tag"><i class="fas fa-laptop-code"></i> DBMS Project Team</span>
+                                <h4 class="dropdown-header-title">Bank Management System</h4>
+                            </div>
+
+                            <div class="group-members-list">
+                                <div class="group-member-item">
+                                    <div class="member-avatar">JB</div>
+                                    <div class="member-info">
+                                        <span class="member-name">Juilee Bade</span>
+                                        <span class="member-role">Team Member</span>
+                                    </div>
+                                    <span class="roll-pill">Roll: 03</span>
+                                </div>
+
+                                <div class="group-member-item">
+                                    <div class="member-avatar">HB</div>
+                                    <div class="member-info">
+                                        <span class="member-name">Hari Bhambhani</span>
+                                        <span class="member-role">Team Member</span>
+                                    </div>
+                                    <span class="roll-pill">Roll: 04</span>
+                                </div>
+
+                                <div class="group-member-item member-item-highlight">
+                                    <div class="member-avatar avatar-highlight">VB</div>
+                                    <div class="member-info">
+                                        <span class="member-name">Vedant Bhangale</span>
+                                        <span class="member-role">Team Member</span>
+                                    </div>
+                                    <span class="roll-pill roll-pill-highlight">Roll: 05</span>
+                                </div>
+
+                                <div class="group-member-item">
+                                    <div class="member-avatar">TC</div>
+                                    <div class="member-info">
+                                        <span class="member-name">Tejas Chaudhari</span>
+                                        <span class="member-role">Team Member</span>
+                                    </div>
+                                    <span class="roll-pill">Roll: 07</span>
+                                </div>
+                            </div>
+
+                            <div class="group-dropdown-footer">
+                                <i class="fas fa-graduation-cap" style="color: #38bdf8;"></i>
+                                <span>Academic Year 2026 • DBMS Evaluation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MySQL Status Badge -->
                     <div class="status-badge-live" id="headerDbStatus" style="background: rgba(16, 185, 129, 0.1); padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.25);">
                         <span class="pulse-dot"></span>
                         <span>MySQL: BankManagementDB</span>
                     </div>
+
                     <button class="btn btn-primary btn-sm" id="btnTransfer">
                         <i class="fas fa-exchange-alt"></i> Transfer Funds
                     </button>
