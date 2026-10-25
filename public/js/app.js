@@ -82,8 +82,7 @@ const viewTitles = {
     'customers': 'Customer Directory & Profiles',
     'accounts': 'Bank Accounts & Portfolios',
     'transactions': 'Transactions Ledger & Audit Trail',
-    'transfers': 'Inter-Account Funds Transfers',
-    'schema-health': 'Database Architecture & EER Diagram'
+    'transfers': 'Inter-Account Funds Transfers'
 };
 
 function switchView(viewName) {
@@ -124,7 +123,6 @@ function switchView(viewName) {
     else if (viewName === 'accounts') loadAccounts();
     else if (viewName === 'transactions') loadTransactions();
     else if (viewName === 'transfers') loadTransfers();
-    else if (viewName === 'schema-health') loadSchemaHealth();
 }
 
 // ----------------------------------------------------------
@@ -406,75 +404,25 @@ async function loadTransfers() {
 }
 
 // ----------------------------------------------------------
-// 6. SCHEMA & DB HEALTH VIEW
+// 6. DB CONNECTION HEALTH CHECK
 // ----------------------------------------------------------
-async function loadSchemaHealth() {
-    const resultBox = document.getElementById('healthCheckDetails');
-    if (resultBox) {
-        resultBox.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Testing MySQL connection and inspecting database tables...`;
-    }
-
+async function testDbConnectionQuick() {
     try {
         const start = performance.now();
         const health = await api.getHealth();
         const latency = Math.round(performance.now() - start);
 
-        if (resultBox) {
-            if (health.success) {
-                const isDemo = health.isDemoMode;
-                const badgeColor = isDemo ? '#38bdf8' : '#34d399';
-                const badgeBg = isDemo ? 'rgba(56, 189, 248, 0.1)' : 'rgba(16, 185, 129, 0.1)';
-                const badgeBorder = isDemo ? 'rgba(56, 189, 248, 0.25)' : 'rgba(16, 185, 129, 0.25)';
-                const titleText = isDemo 
-                    ? '<i class="fas fa-cloud"></i> Cloud Demonstration Engine: ACTIVE (In-Memory Database Fallback)'
-                    : '<i class="fas fa-check-circle"></i> MySQL Database Connection: HEALTHY (200 OK)';
-
-                resultBox.innerHTML = `
-                    <div style="background: ${badgeBg}; border: 1px solid ${badgeBorder}; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
-                        <div style="color: ${badgeColor}; font-weight: 700; margin-bottom: 4px;">
-                            ${titleText}
-                        </div>
-                        <div style="font-size: 0.82rem; color: #cbd5e1;">${health.message}</div>
-                        ${isDemo ? `
-                            <div style="margin-top: 10px; padding: 10px 12px; background: rgba(0,0,0,0.25); border-radius: 6px; font-size: 0.78rem; color: #94a3b8; line-height: 1.5;">
-                                <i class="fas fa-info-circle" style="color:#38bdf8; margin-right: 6px;"></i>
-                                <strong>Why this mode:</strong> Cloud hosting (Vercel) cannot access your home PC's <code style="color:#38bdf8;">127.0.0.1:3306</code>. The built-in memory engine ensures all operations (deposits, withdrawals, transfers, triggers) work seamlessly on Vercel without crashing.
-                            </div>
-                        ` : `
-                            <div style="font-size: 0.82rem; color: #cbd5e1; margin-top: 4px;">Ping Latency: <strong>${latency}ms</strong> • Status: ACTIVE • Pool Connections: READY</div>
-                        `}
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px;">
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 6px; border: 1px solid var(--border-subtle);">
-                            <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Database</div>
-                            <div class="mono-val" style="color: #fff; font-size: 0.95rem;">${health.database}</div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 6px; border: 1px solid var(--border-subtle);">
-                            <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Engine Version</div>
-                            <div class="mono-val" style="color: #fff; font-size: 0.95rem;">${health.version}</div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 6px; border: 1px solid var(--border-subtle);">
-                            <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Tables Count</div>
-                            <div class="mono-val" style="color: ${badgeColor}; font-size: 0.95rem;">${health.tableCount} Tables</div>
-                        </div>
-                    </div>
-                    <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;"><strong>Verified Schema Tables:</strong></div>
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        ${health.tables.map(t => `<span class="badge badge-type" style="padding: 6px 12px; font-family: var(--font-mono);"><i class="fas fa-table" style="color:#06b6d4; margin-right: 6px;"></i>${t}</span>`).join('')}
-                    </div>
-                `;
+        if (health.success) {
+            if (health.isDemoMode) {
+                showToast('info', `Cloud Demo Mode: Active (${latency}ms)`);
             } else {
-                resultBox.innerHTML = `
-                    <div style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.25); border-radius: 8px; padding: 14px; color: #fb7185;">
-                        <i class="fas fa-exclamation-triangle"></i> <strong>Connection Failed:</strong> ${health.message}
-                    </div>
-                `;
+                showToast('success', `MySQL Database: Connected (${latency}ms, ${health.database})`);
             }
+        } else {
+            showToast('error', `DB Connection: ${health.message || 'Offline'}`);
         }
     } catch (err) {
-        if (resultBox) {
-            resultBox.innerHTML = `<div style="color: #fb7185;">Health check failed: ${err.message}</div>`;
-        }
+        showToast('error', `Connection Failed: ${err.message}`);
     }
 }
 
@@ -703,8 +651,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Test DB connection button in sidebar
     const testDbBtn = document.getElementById('btnTestConnection');
     if (testDbBtn) {
-        testDbBtn.addEventListener('click', () => {
-            switchView('schema-health');
+        testDbBtn.addEventListener('click', async () => {
+            await testDbConnectionQuick();
             closeMobileSidebar();
         });
     }

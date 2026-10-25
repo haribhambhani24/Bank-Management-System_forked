@@ -69,14 +69,6 @@
                         <span>Inter-Acc Transfers</span>
                     </a>
                 </li>
-
-                <li class="nav-label">System & Schema</li>
-                <li class="nav-item" data-view="schema-health">
-                    <a href="#schema-health" id="navSchema">
-                        <i class="fas fa-project-diagram"></i>
-                        <span>EER Diagram & DB</span>
-                    </a>
-                </li>
             </ul>
 
             <div class="sidebar-footer">
@@ -488,61 +480,6 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                </section>
-
-                <!-- ================= 6. VIEW: SCHEMA & DB HEALTH ================= -->
-                <section id="view-schema-health" class="view-section">
-                    <div class="card-panel" style="margin-bottom: 24px;">
-                        <div class="card-header-flex">
-                            <h3><i class="fas fa-server" style="color:#10b981;"></i> MySQL Live Connection & Health</h3>
-                            <button class="btn btn-outline btn-sm" onclick="loadSchemaHealth()">
-                                <i class="fas fa-sync-alt"></i> Re-test Connection
-                            </button>
-                        </div>
-                        <div id="healthCheckDetails">
-                            <i class="fas fa-spinner fa-spin"></i> Checking connection status...
-                        </div>
-                    </div>
-
-                    <!-- EER Diagram Section -->
-                    <div class="card-panel" style="margin-bottom: 24px;">
-                        <div class="card-header-flex">
-                            <div>
-                                <h3><i class="fas fa-project-diagram" style="color: #3b82f6;"></i> MySQL EER Diagram & Relational Schema</h3>
-                                <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 4px;">Entity-Relationship diagram matching the MySQL database implementation</p>
-                            </div>
-                            <span class="badge badge-type">Customers • Accounts • Transactions • Transfers</span>
-                        </div>
-
-                        <div class="eer-image-box">
-                            <img src="/images/eer-diagram.png" alt="MySQL Bank Management System EER Diagram">
-                        </div>
-                    </div>
-
-                    <!-- Trigger Architecture -->
-                    <div class="card-panel">
-                        <div class="card-header-flex">
-                            <h3><i class="fas fa-bolt" style="color: #d97706;"></i> MySQL Automation Trigger: <code>after_account_update</code></h3>
-                            <span class="badge badge-active">Active in MySQL</span>
-                        </div>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
-                            Whenever an account balance is updated by a deposit, withdrawal, or funds transfer, MySQL automatically fires this database trigger to record an immutable audit row in the <code>Transactions</code> table:
-                        </p>
-                        <div class="sql-trigger-box">CREATE TRIGGER after_account_update
-AFTER UPDATE ON Accounts
-FOR EACH ROW
-BEGIN
-    IF NEW.balance &lt;&gt; OLD.balance THEN
-        INSERT INTO Transactions (account_number, transaction_type, amount, balance_after)
-        VALUES (
-            NEW.account_number, 
-            IF(NEW.balance &gt; OLD.balance, 'DEPOSIT', 'WITHDRAWAL'), 
-            ABS(NEW.balance - OLD.balance), 
-            NEW.balance
-        );
-    END IF;
-END;</div>
                     </div>
                 </section>
 

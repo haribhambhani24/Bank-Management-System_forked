@@ -176,4 +176,4 @@ Open your browser at **[http://localhost:5000](http://localhost:5000)**.
 3. **Account Portfolio:** Manage Savings, Checking, and Fixed Deposit accounts with status controls (Freeze / Unfreeze / Close).
 4. **Deposit & Withdrawal:** Instant balance updates with automated trigger logging.
 5. **ACID Inter-Account Transfers:** Atomic database transactions that debit sender, credit receiver, record the transfer, and maintain data consistency.
-6. **EER Diagram & DB Inspector:** Live DB connection tester displaying ping latency, database version, table list, and schema diagram.
+6. **Database Connection Inspector:** Real-time DB connection tester displaying ping latency, database version, and live status.
