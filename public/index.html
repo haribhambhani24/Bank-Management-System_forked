@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Bank Management System | DBMS Project Portal</title>
+    <meta name="description" content="Next-generation Bank Management System powered by MySQL and Node.js. Manage customers, accounts, transactions, and transfers with real-time ACID consistency.">
+    
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom Design System Stylesheet -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="app-layout">
+        <!-- ================= SIDEBAR NAVIGATION ================= -->
+        <aside class="sidebar">
+            <div class="brand-section">
+                <div class="brand-logo-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <div class="brand-info">
+                    <h1>Aura Bank</h1>
+                    <span>DBMS Management</span>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-label">Main Navigation</li>
+                <li class="nav-item active" data-view="dashboard">
+                    <a href="#dashboard" id="navDashboard">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-view="customers">
+                    <a href="#customers" id="navCustomers">
+                        <i class="fas fa-users"></i>
+                        <span>Customers</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-view="accounts">
+                    <a href="#accounts" id="navAccounts">
+                        <i class="fas fa-wallet"></i>
+                        <span>Accounts</span>
+                    </a>
+                </li>
+
+                <li class="nav-label">Transactions & Transfers</li>
+                <li class="nav-item" data-view="transactions">
+                    <a href="#transactions" id="navTransactions">
+                        <i class="fas fa-receipt"></i>
+                        <span>All Transactions</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-view="transfers">
+                    <a href="#transfers" id="navTransfers">
+                        <i class="fas fa-random"></i>
+                        <span>Inter-Acc Transfers</span>
+                    </a>
+                </li>
+
+                <li class="nav-label">System & Schema</li>
+                <li class="nav-item" data-view="schema-health">
+                    <a href="#schema-health" id="navSchema">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>EER Diagram & DB</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="db-status-card">
+                    <div class="status-indicator-row">
+                        <div class="status-badge-live" id="sidebarDbBadge">
+                            <span class="pulse-dot"></span>
+                            <span>MySQL Live</span>
+                        </div>
+                        <span class="status-db-name">127.0.0.1:3306</span>
+                    </div>
+                    <button class="btn-test-db" id="btnTestConnection">
+                        <i class="fas fa-vial"></i> Test DB Connection
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ================= MAIN WRAPPER ================= -->
+        <div class="main-wrapper">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="page-title-group">
+                    <h2 id="pageMainHeading">Banking Management Console</h2>
+                    <p>Connected to <code style="color:#38bdf8; font-family:var(--font-mono);">BankManagementDB</code> on MySQL 8.0</p>
+                </div>
+
+                <div class="header-actions">
+                    <div class="status-badge-live" id="headerDbStatus" style="background: rgba(16, 185, 129, 0.1); padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.25);">
+                        <span class="pulse-dot"></span>
+                        <span>MySQL: BankManagementDB</span>
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="btnTransfer">
+                        <i class="fas fa-exchange-alt"></i> Transfer Funds
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content Container -->
+            <main class="content-body">
+
+                <!-- ================= 1. VIEW: DASHBOARD ================= -->
+                <section id="view-dashboard" class="view-section active-view">
+                    <!-- KPI Metric Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card" style="--card-accent: #10b981;">
+                            <div class="stat-info">
+                                <div class="stat-label">Total Deposits (Liquidity)</div>
+                                <div class="stat-value" id="statTotalLiquidity">$0.00</div>
+                                <div class="stat-sub">Across all active accounts</div>
+                            </div>
+                            <div class="stat-icon icon-emerald">
+                                <i class="fas fa-vault"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-card" style="--card-accent: #3b82f6;">
+                            <div class="stat-info">
+                                <div class="stat-label">Total Accounts</div>
+                                <div class="stat-value" id="statTotalAccounts">0</div>
+                                <div class="stat-sub" id="statActiveAccounts">0 Active</div>
+                            </div>
+                            <div class="stat-icon icon-blue">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-card" style="--card-accent: #a855f7;">
+                            <div class="stat-info">
+                                <div class="stat-label">Registered Customers</div>
+                                <div class="stat-value" id="statTotalCustomers">0</div>
+                                <div class="stat-sub">KYC Verified profiles</div>
+                            </div>
+                            <div class="stat-icon icon-purple">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-card" style="--card-accent: #06b6d4;">
+                            <div class="stat-info">
+                                <div class="stat-label">Total Transfers Volume</div>
+                                <div class="stat-value" id="statTransferVolume">$0.00</div>
+                                <div class="stat-sub"><span id="statTotalTransfers">0</span> inter-account transfers</div>
+                            </div>
+                            <div class="stat-icon icon-cyan">
+                                <i class="fas fa-paper-plane"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Action Bar -->
+                    <div class="quick-action-strip">
+                        <div class="strip-text">
+                            <h3>Quick Financial Operations</h3>
+                            <p>Instant deposit, withdrawal, funds transfer, or account registration</p>
+                        </div>
+                        <div class="strip-buttons">
+                            <button class="btn btn-emerald btn-sm" id="btnDeposit">
+                                <i class="fas fa-arrow-down"></i> Deposit Money
+                            </button>
+                            <button class="btn btn-rose btn-sm" id="btnWithdraw">
+                                <i class="fas fa-arrow-up"></i> Withdraw Funds
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="openModal('transferModal')">
+                                <i class="fas fa-random"></i> Quick Transfer
+                            </button>
+                            <button class="btn btn-outline btn-sm" id="btnNewAccount">
+                                <i class="fas fa-plus-circle"></i> Open Account
+                            </button>
+                            <button class="btn btn-outline btn-sm" id="btnNewCustomer">
+                                <i class="fas fa-user-plus"></i> Add Customer
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Columns: Breakdown & Recent Activity -->
+                    <div class="dashboard-columns">
+                        <!-- Account Types Distribution -->
+                        <div class="card-panel">
+                            <div class="card-header-flex">
+                                <h3><i class="fas fa-chart-bar" style="color: #6366f1;"></i> Portfolio by Account Type</h3>
+                                <span class="badge badge-type">Live Breakdown</span>
+                            </div>
+                            <div id="accountTypesBreakdown">
+                                <div class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading breakdown...</div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Transactions -->
+                        <div class="card-panel">
+                            <div class="card-header-flex">
+                                <h3><i class="fas fa-history" style="color: #06b6d4;"></i> Recent Ledger Transactions</h3>
+                                <button class="btn btn-sm btn-outline" onclick="switchView('transactions')">View All</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="banking-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Acc #</th>
+                                            <th>Customer</th>
+                                            <th>Type</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentTransactionsBody">
+                                        <tr><td colspan="5" class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= 2. VIEW: CUSTOMERS ================= -->
+                <section id="view-customers" class="view-section">
+                    <div class="card-panel">
+                        <div class="card-header-flex">
+                            <div>
+                                <h3><i class="fas fa-users" style="color:#6366f1;"></i> Customer Management</h3>
+                                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 4px;">Registered clients and their associated bank accounts</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openModal('newCustomerModal')">
+                                <i class="fas fa-user-plus"></i> Register New Customer
+                            </button>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="filter-bar">
+                            <div class="search-input-wrapper">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="customerSearchInput" class="search-input" placeholder="Search by name, email, or phone...">
+                            </div>
+                        </div>
+
+                        <!-- Customers Table -->
+                        <div class="table-responsive">
+                            <table class="banking-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Customer</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Accounts</th>
+                                        <th>Total Balance</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customersTableBody">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= 3. VIEW: ACCOUNTS ================= -->
+                <section id="view-accounts" class="view-section">
+                    <div class="card-panel">
+                        <div class="card-header-flex">
+                            <div>
+                                <h3><i class="fas fa-wallet" style="color:#06b6d4;"></i> Bank Accounts</h3>
+                                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 4px;">Savings, Checking, and Fixed Deposit accounts</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openModal('newAccountModal')">
+                                <i class="fas fa-plus-circle"></i> Open New Account
+                            </button>
+                        </div>
+
+                        <!-- Filters Bar -->
+                        <div class="filter-bar">
+                            <div class="search-input-wrapper">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="accountSearchInput" class="search-input" placeholder="Search account number or holder name...">
+                            </div>
+
+                            <div class="filter-pills">
+                                <button class="pill-btn account-filter-pill active" data-type="">All Accounts</button>
+                                <button class="pill-btn account-filter-pill" data-type="SAVINGS">Savings</button>
+                                <button class="pill-btn account-filter-pill" data-type="CHECKING">Checking</button>
+                                <button class="pill-btn account-filter-pill" data-type="FIXED_DEPOSIT">Fixed Deposit</button>
+                                <button class="pill-btn account-filter-pill" data-status="FROZEN">Frozen</button>
+                            </div>
+                        </div>
+
+                        <!-- Accounts Table -->
+                        <div class="table-responsive">
+                            <table class="banking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Account #</th>
+                                        <th>Account Holder</th>
+                                        <th>Type</th>
+                                        <th>Current Balance</th>
+                                        <th>Status</th>
+                                        <th>Opened Date</th>
+                                        <th>Operations</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="accountsTableBody">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= 4. VIEW: TRANSACTIONS ================= -->
+                <section id="view-transactions" class="view-section">
+                    <div class="card-panel">
+                        <div class="card-header-flex">
+                            <div>
+                                <h3><i class="fas fa-receipt" style="color:#10b981;"></i> Transactions Ledger</h3>
+                                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 4px;">Automated transactional audit trail recorded by MySQL triggers</p>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-emerald btn-sm" onclick="openModal('depositModal')">
+                                    <i class="fas fa-arrow-down"></i> Deposit
+                                </button>
+                                <button class="btn btn-rose btn-sm" onclick="openModal('withdrawModal')">
+                                    <i class="fas fa-arrow-up"></i> Withdraw
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Filter -->
+                        <div class="filter-bar">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Filter by Type:</label>
+                                <select id="txTypeFilter" class="form-control" style="width: 180px; padding: 7px 12px;">
+                                    <option value="">All Types</option>
+                                    <option value="DEPOSIT">Deposits Only</option>
+                                    <option value="WITHDRAWAL">Withdrawals Only</option>
+                                    <option value="TRANSFER">Transfers Only</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Transactions Table -->
+                        <div class="table-responsive">
+                            <table class="banking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tx ID</th>
+                                        <th>Account #</th>
+                                        <th>Account Holder</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Balance After</th>
+                                        <th>Timestamp</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactionsTableBody">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= 5. VIEW: TRANSFERS ================= -->
+                <section id="view-transfers" class="view-section">
+                    <div class="card-panel">
+                        <div class="card-header-flex">
+                            <div>
+                                <h3><i class="fas fa-random" style="color:#3b82f6;"></i> Inter-Account Transfers Ledger</h3>
+                                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 4px;">Full ACID transactional transfer ledger between sender and receiver accounts</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openModal('transferModal')">
+                                <i class="fas fa-exchange-alt"></i> New Transfer
+                            </button>
+                        </div>
+
+                        <!-- Transfers Table -->
+                        <div class="table-responsive">
+                            <table class="banking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Transfer ID</th>
+                                        <th>Sender Account</th>
+                                        <th>Receiver Account</th>
+                                        <th>Transferred Amount</th>
+                                        <th>Date & Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transfersTableBody">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= 6. VIEW: SCHEMA & DB HEALTH ================= -->
+                <section id="view-schema-health" class="view-section">
+                    <div class="card-panel" style="margin-bottom: 24px;">
+                        <div class="card-header-flex">
+                            <h3><i class="fas fa-server" style="color:#10b981;"></i> MySQL Live Connection & Health</h3>
+                            <button class="btn btn-outline btn-sm" onclick="loadSchemaHealth()">
+                                <i class="fas fa-sync-alt"></i> Re-test Connection
+                            </button>
+                        </div>
+                        <div id="healthCheckDetails">
+                            <i class="fas fa-spinner fa-spin"></i> Checking connection status...
+                        </div>
+                    </div>
+
+                    <!-- EER Diagram Section -->
+                    <div class="card-panel" style="margin-bottom: 24px;">
+                        <div class="card-header-flex">
+                            <div>
+                                <h3><i class="fas fa-project-diagram" style="color:#6366f1;"></i> MySQL EER Diagram & Relational Schema</h3>
+                                <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 4px;">Entity-Relationship diagram matching the MySQL database implementation</p>
+                            </div>
+                            <span class="badge badge-type">Customers • Accounts • Transactions • Transfers</span>
+                        </div>
+
+                        <div class="eer-image-box">
+                            <img src="/images/eer-diagram.png" alt="MySQL Bank Management System EER Diagram">
+                        </div>
+                    </div>
+
+                    <!-- Trigger Architecture -->
+                    <div class="card-panel">
+                        <div class="card-header-flex">
+                            <h3><i class="fas fa-bolt" style="color:#f59e0b;"></i> MySQL Automation Trigger: <code>after_account_update</code></h3>
+                            <span class="badge badge-active">Active in MySQL</span>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+                            Whenever an account balance is updated by a deposit, withdrawal, or funds transfer, MySQL automatically fires this database trigger to record an immutable audit row in the <code>Transactions</code> table:
+                        </p>
+                        <div class="sql-trigger-box">CREATE TRIGGER after_account_update
+AFTER UPDATE ON Accounts
+FOR EACH ROW
+BEGIN
+    IF NEW.balance &lt;&gt; OLD.balance THEN
+        INSERT INTO Transactions (account_number, transaction_type, amount, balance_after)
+        VALUES (
+            NEW.account_number, 
+            IF(NEW.balance &gt; OLD.balance, 'DEPOSIT', 'WITHDRAWAL'), 
+            ABS(NEW.balance - OLD.balance), 
+            NEW.balance
+        );
+    END IF;
+END;</div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ================= MODALS ================= -->
+
+    <!-- 1. Deposit Modal -->
+    <div class="modal-overlay" id="depositModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-arrow-down" style="color:#10b981;"></i> Deposit Funds</h3>
+                <button class="modal-close-btn" onclick="closeModal('depositModal')">&times;</button>
+            </div>
+            <form id="depositForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="depositAccountSelect">Target Account</label>
+                        <select id="depositAccountSelect" class="form-control" required>
+                            <option value="">Select Account...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="depositAmount">Deposit Amount ($)</label>
+                        <input type="number" id="depositAmount" class="form-control form-control-mono" step="0.01" min="1" placeholder="e.g. 5000.00" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('depositModal')">Cancel</button>
+                    <button type="submit" class="btn btn-emerald"><i class="fas fa-check"></i> Confirm Deposit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Withdraw Modal -->
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-arrow-up" style="color:#f43f5e;"></i> Withdraw Funds</h3>
+                <button class="modal-close-btn" onclick="closeModal('withdrawModal')">&times;</button>
+            </div>
+            <form id="withdrawForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="withdrawAccountSelect">Source Account</label>
+                        <select id="withdrawAccountSelect" class="form-control" required>
+                            <option value="">Select Account...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="withdrawAmount">Withdrawal Amount ($)</label>
+                        <input type="number" id="withdrawAmount" class="form-control form-control-mono" step="0.01" min="1" placeholder="e.g. 1500.00" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('withdrawModal')">Cancel</button>
+                    <button type="submit" class="btn btn-rose"><i class="fas fa-check"></i> Confirm Withdrawal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Transfer Modal -->
+    <div class="modal-overlay" id="transferModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-exchange-alt" style="color:#6366f1;"></i> Inter-Account Transfer</h3>
+                <button class="modal-close-btn" onclick="closeModal('transferModal')">&times;</button>
+            </div>
+            <form id="transferForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="transferSenderSelect">Sender Account (Debit)</label>
+                        <select id="transferSenderSelect" class="form-control" required>
+                            <option value="">Select Sender Account...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transferReceiverSelect">Receiver Account (Credit)</label>
+                        <select id="transferReceiverSelect" class="form-control" required>
+                            <option value="">Select Receiver Account...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transferAmount">Transfer Amount ($)</label>
+                        <input type="number" id="transferAmount" class="form-control form-control-mono" step="0.01" min="1" placeholder="e.g. 2500.00" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('transferModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Execute Transfer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. New Customer Modal -->
+    <div class="modal-overlay" id="newCustomerModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus" style="color:#06b6d4;"></i> Register Customer</h3>
+                <button class="modal-close-btn" onclick="closeModal('newCustomerModal')">&times;</button>
+            </div>
+            <form id="newCustomerForm">
+                <div class="modal-body">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div class="form-group">
+                            <label for="custFirstName">First Name</label>
+                            <input type="text" id="custFirstName" class="form-control" placeholder="e.g. Rohan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="custLastName">Last Name</label>
+                            <input type="text" id="custLastName" class="form-control" placeholder="e.g. Kulkarni" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="custEmail">Email Address</label>
+                        <input type="email" id="custEmail" class="form-control" placeholder="rohan.k@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="custPhone">Phone Number</label>
+                        <input type="tel" id="custPhone" class="form-control" placeholder="9876543210" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="custAddress">Residential Address</label>
+                        <textarea id="custAddress" class="form-control" rows="2" placeholder="Mumbai, Maharashtra"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('newCustomerModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Register Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. Open New Account Modal -->
+    <div class="modal-overlay" id="newAccountModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus-circle" style="color:#a855f7;"></i> Open Bank Account</h3>
+                <button class="modal-close-btn" onclick="closeModal('newAccountModal')">&times;</button>
+            </div>
+            <form id="newAccountForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="accountCustomerSelect">Select Customer</label>
+                        <select id="accountCustomerSelect" class="form-control" required>
+                            <option value="">Select Customer...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountTypeSelect">Account Type</label>
+                        <select id="accountTypeSelect" class="form-control" required>
+                            <option value="SAVINGS">SAVINGS Account</option>
+                            <option value="CHECKING">CHECKING Account</option>
+                            <option value="FIXED_DEPOSIT">FIXED DEPOSIT Account</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountInitialBalance">Initial Deposit ($)</label>
+                        <input type="number" id="accountInitialBalance" class="form-control form-control-mono" step="0.01" min="0" placeholder="0.00" value="1000.00" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('newAccountModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. Customer Details Modal -->
+    <div class="modal-overlay" id="customerDetailsModal">
+        <div class="modal-box modal-box-lg">
+            <div class="modal-header">
+                <h3><i class="fas fa-id-card" style="color:#6366f1;"></i> Customer Profile & Accounts</h3>
+                <button class="modal-close-btn" onclick="closeModal('customerDetailsModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="customerDetailsModalBody">
+                <i class="fas fa-spinner fa-spin"></i> Loading customer details...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('customerDetailsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
