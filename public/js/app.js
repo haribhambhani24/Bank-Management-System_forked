@@ -1,5 +1,5 @@
 // ==========================================================
-// AURA BANK - APPLICATION CONTROLLER & UI LOGIC
+// HORIZON BANK - APPLICATION CONTROLLER & UI LOGIC
 // ==========================================================
 
 // Global state

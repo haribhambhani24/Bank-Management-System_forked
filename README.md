@@ -1,4 +1,4 @@
-# 🏦 Aura Bank Management System (DBMS Project)
+# 🏦 Horizon Bank Management System (DBMS Project)
 
 A complete, modern **Bank Management System** developed with **MySQL**, **Node.js / Express**, and a sleek **Glassmorphic Web Interface**.
 
