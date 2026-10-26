@@ -1,5 +1,5 @@
 // ==========================================================
-// AURA BANK - FRONTEND API CLIENT
+// HORIZON BANK - FRONTEND API CLIENT
 // ==========================================================
 
 const API_BASE = '/api';
